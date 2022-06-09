@@ -17,13 +17,16 @@ public class TblEmployee
   public string? LastName { get; set; }
   [StringLength(250)]
   public string? Email { get; set; }
+  public int Age { get; set; }
   public DateTime? Dob { get; set; }
+  [StringLength(250)]
   public string? Gender { get; set; }
   public int IsMarried { get; set; }
   public int IsActive { get; set; }
   [ForeignKey("DesignationId")]
-  public int DesignationId { get; set; }
+  public Guid DesignationId { get; set; }
   [NotMapped]
   public string? Designation { get; set; }
-
+  [NotMapped]
+  public string? Name { get; set; }
 }
