@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220609051454_InitialMigration")]
+    [Migration("20220609181639_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,13 +19,13 @@ namespace API.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.5");
 
-            modelBuilder.Entity("API.Entities.TblDesignation", b =>
+            modelBuilder.Entity("API.Entities.Designation", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Designation")
+                    b.Property<string>("DesignationName")
                         .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
@@ -34,19 +34,19 @@ namespace API.Data.Migrations
                     b.ToTable("Designations");
                 });
 
-            modelBuilder.Entity("API.Entities.TblEmployee", b =>
+            modelBuilder.Entity("API.Entities.Employee", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Age")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid>("DesignationId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("DesignationId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("Dob")
+                    b.Property<DateTime?>("Doj")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")

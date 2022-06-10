@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Controllers;
 
 [ApiController]
-[Route("api/[controller]/[action]")]
+[Route("api/[controller]")]
 public class EmployeeController : ControllerBase
 {
   private readonly AppDbContext _dbContext;
@@ -15,98 +15,99 @@ public class EmployeeController : ControllerBase
     _dbContext = dbContext;
 
   }
-  [HttpGet(Name = "GetEmployeesList")]
-  public async Task<List<TblEmployee>> GetEmployees()
+  // GET: api/Employees
+  [HttpGet]
+  public async Task<List<Employee>> GetEmployees()
   {
-    return await (from emp in _dbContext.Employees
-                  join des in _dbContext.Designations
-                  on emp.DesignationId equals des.Id
-
-                  select new TblEmployee
-                  {
-                    Id = emp.Id,
-                    Name = $"{emp.FirstName} {emp.LastName}",
-                    Email = emp.Email,
-                    Age = emp.Age,
-                    DesignationId = emp.DesignationId,
-                    Designation = emp.Designation,
-                    Dob = emp.Dob,
-                    Gender = emp.Gender,
-                    IsActive = emp.IsActive,
-                    IsMarried = emp.IsMarried
-                  }).ToListAsync();
+    var employees = await (from emp in _dbContext.Employees
+                           join des in _dbContext.Designations on emp.Id equals des.Id
+                           select new Employee()
+                           {
+                             Id = emp.Id,
+                             FirstName = emp.FirstName,
+                             LastName = emp.LastName,
+                             Name = $"{emp.FirstName} {emp.LastName}",
+                             Age = emp.Age,
+                             Doj = emp.Doj,
+                             Email = emp.Email,
+                             Gender = emp.Gender,
+                             IsActive = emp.IsActive,
+                             IsMarried = emp.IsMarried,
+                             DesignationId = emp.DesignationId,
+                             Designation = des.DesignationName,
+                           }).ToListAsync();
+    return employees;
   }
-  // // GET: api/Employee/5
-  // [HttpGet("{id}")]
-  // public async Task<ActionResult<TblEmployee>> GetTblEmployee(int id)
-  // {
-  //   var tblEmployee = await _dbContext.Employees.FindAsync(id);
+  // GET: api/Employee/5
+  [HttpGet("{id}")]
+  public async Task<ActionResult<Employee>> GetEmployees(int id)
+  {
+    var employee = await _dbContext.Employees.FindAsync(id);
 
-  //   if (tblEmployee == null)
-  //   {
-  //     return NotFound();
-  //   }
+    if (employee == null)
+    {
+      return NotFound();
+    }
+    return employee;
+  }
 
-  //   return tblEmployee;
-  // }
 
+  [HttpPut("{id}")]
+  public async Task<IActionResult> PutEmployee(int id, Employee empModel)
+  {
+    if (id != empModel.Id)
+    {
+      return BadRequest();
+    }
 
-  // [HttpPut("{id}")]
-  // public async Task<IActionResult> PutTblEmployee(int id, TblEmployee tblEmployee)
-  // {
-  //   if (id != tblEmployee.Id)
-  //   {
-  //     return BadRequest();
-  //   }
+    _dbContext.Entry(empModel).State = EntityState.Modified;
 
-  //   _dbContext.Entry(tblEmployee).State = EntityState.Modified;
+    try
+    {
+      await _dbContext.SaveChangesAsync();
+    }
+    catch (DbUpdateConcurrencyException)
+    {
+      if (!EmployeeExists(id))
+      {
+        return NotFound();
+      }
+      else
+      {
+        throw;
+      }
+    }
 
-  //   try
-  //   {
-  //     await _dbContext.SaveChangesAsync();
-  //   }
-  //   catch (DbUpdateConcurrencyException)
-  //   {
-  //     if (!TblEmployeeExists(id))
-  //     {
-  //       return NotFound();
-  //     }
-  //     else
-  //     {
-  //       throw;
-  //     }
-  //   }
+    return NoContent();
+  }
 
-  //   return NoContent();
-  // }
+  [HttpPost]
+  public async Task<ActionResult<Employee>> PostEmployee(Employee emplModel)
+  {
+    await _dbContext.Employees.AddAsync(emplModel);
+    await _dbContext.SaveChangesAsync();
 
-  // [HttpPost]
-  // public async Task<ActionResult<TblEmployee>> PostTblEmployee(TblEmployee tblEmployee)
-  // {
-  //   _dbContext.Employees.Add(tblEmployee);
-  //   await _dbContext.SaveChangesAsync();
+    return CreatedAtAction(nameof(GetEmployees), new { id = emplModel.Id }, emplModel);
+  }
 
-  //   return CreatedAtAction("GetTblEmployee", new { id = tblEmployee.Id }, tblEmployee);
-  // }
+  // DELETE: api/Employee/5
+  [HttpDelete("{id}")]
+  public async Task<ActionResult<Employee>> DeleteEmployee(int id)
+  {
+    var employee = await _dbContext.Employees.FindAsync(id);
+    if (employee == null)
+    {
+      return NotFound();
+    }
 
-  // // DELETE: api/Employee/5
-  // [HttpDelete("{id}")]
-  // public async Task<ActionResult<TblEmployee>> DeleteTblEmployee(int id)
-  // {
-  //   var tblEmployee = await _dbContext.Employees.FindAsync(id);
-  //   if (tblEmployee == null)
-  //   {
-  //     return NotFound();
-  //   }
+    _dbContext.Employees.Remove(employee);
+    await _dbContext.SaveChangesAsync();
 
-  //   _dbContext.Employees.Remove(tblEmployee);
-  //   await _dbContext.SaveChangesAsync();
+    return employee;
+  }
 
-  //   return tblEmployee;
-  // }
-
-  // private bool TblEmployeeExists(int id)
-  // {
-  //   return _dbContext.Employees.Any(e => e.Id == id);
-  // }
+  private bool EmployeeExists(int id)
+  {
+    return _dbContext.Employees.Any(e => e.Id == id);
+  }
 }

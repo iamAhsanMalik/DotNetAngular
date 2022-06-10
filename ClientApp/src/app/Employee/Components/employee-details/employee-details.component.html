@@ -1,0 +1,28 @@
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Joining Date</th>
+      <th>Age</th>
+      <th>Gender</th>
+      <th>Is Married</th>
+      <th>Is Active</th>
+      <th>Designation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let emp of empService.employeesList">
+      <td>{{emp.id}}</td>
+      <td>{{emp.name}}</td>
+      <td>{{emp.email}}</td>
+      <td>{{emp.doj}}</td>
+      <td>{{emp.age}}</td>
+      <td>{{emp.gender}}</td>
+      <td>{{emp.isMarried}}</td>
+      <td>{{emp.isActive}}</td>
+      <td>{{emp.designation}}</td>
+    </tr>
+  </tbody>
+</table>

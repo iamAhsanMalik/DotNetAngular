@@ -34,6 +34,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
+app.UseCors("WebAPI");
 app.MapControllers();
-app.UseCors();
 app.Run();

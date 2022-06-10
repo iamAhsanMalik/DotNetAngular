@@ -13,8 +13,9 @@ namespace API.Data.Migrations
                 name: "Designations",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Designation = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    DesignationName = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -25,16 +26,17 @@ namespace API.Data.Migrations
                 name: "Employees",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     FirstName = table.Column<string>(type: "TEXT", maxLength: 30, nullable: true),
                     LastName = table.Column<string>(type: "TEXT", maxLength: 30, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true),
                     Age = table.Column<int>(type: "INTEGER", nullable: false),
-                    Dob = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Doj = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Gender = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true),
                     IsMarried = table.Column<int>(type: "INTEGER", nullable: false),
                     IsActive = table.Column<int>(type: "INTEGER", nullable: false),
-                    DesignationId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    DesignationId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

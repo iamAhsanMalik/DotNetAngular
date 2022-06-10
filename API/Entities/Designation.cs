@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Entities;
 
-public class TblDesignation
+public class Designation
 {
   [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-  public Guid Id { get; set; }
+  public int Id { get; set; }
   [StringLength(250)]
-  public string? Designation { get; set; }
+  public string? DesignationName { get; set; }
 }
